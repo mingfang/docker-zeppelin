@@ -1,4 +1,4 @@
 #!/bin/bash
 source helper
 
-docker run --rm -v `pwd`:/docker -it ${IMAGE} bash
+docker run -p 8081:8080 -v `pwd`/notebook:/zeppelin/notebook -v `pwd`/data:/data --rm -v `pwd`:/docker -it ${IMAGE} bash

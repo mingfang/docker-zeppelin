@@ -5,4 +5,4 @@
 source /etc/envvars
 
 exec 2>&1
-exec /zeppelin/bin/zeppelin.sh
+exec Xvfb :0 -screen 0 1024x768x24 -ac +extension RANDR

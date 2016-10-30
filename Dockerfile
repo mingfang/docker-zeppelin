@@ -1,5 +1,5 @@
-FROM ubuntu:14.04
-  
+FROM ubuntu:16.04
+
 ENV DEBIAN_FRONTEND=noninteractive \
     LANG=en_US.UTF-8 \
     TERM=xterm
@@ -8,12 +8,12 @@ RUN echo "export PS1='\e[1;31m\]\u@\h:\w\\$\[\e[0m\] '" >> /root/.bashrc
 RUN apt-get update
 
 # Runit
-RUN apt-get install -y runit 
+RUN apt-get install -y --no-install-recommends runit
 CMD export > /etc/envvars && /usr/sbin/runsvdir-start
 RUN echo 'export > /etc/envvars' >> /root/.bashrc
 
 # Utilities
-RUN apt-get install -y vim less net-tools inetutils-ping wget curl git telnet nmap socat dnsutils netcat tree htop unzip sudo software-properties-common jq psmisc
+RUN apt-get install -y --no-install-recommends vim less net-tools inetutils-ping wget curl git telnet nmap socat dnsutils netcat tree htop unzip sudo software-properties-common jq psmisc iproute python
 
 #Install Oracle Java 8
 RUN add-apt-repository ppa:webupd8team/java -y && \
@@ -22,7 +22,48 @@ RUN add-apt-repository ppa:webupd8team/java -y && \
     apt-get install -y oracle-java8-installer
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
-RUN wget -O - http://www-us.apache.org/dist/zeppelin/zeppelin-0.6.0/zeppelin-0.6.0-bin-all.tgz | tar zx
+#Zeppelin
+RUN wget -O - http://www-us.apache.org/dist/zeppelin/zeppelin-0.6.2/zeppelin-0.6.2-bin-all.tgz | tar zx
+RUN mv zeppelin* zeppelin
+
+#Spark
+RUN wget -O - http://d3kbcqa49mib13.cloudfront.net/spark-2.0.1-bin-hadoop2.7.tgz | tar zx
+RUN mv spark* spark
+ENV SPARK_HOME=/spark
+
+#R
+RUN apt-get install -y r-base
+RUN apt-get install -y libcurl4-gnutls-dev libssl-dev libxml2-dev
+RUN R -e "install.packages('devtools', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('knitr', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('ggplot2', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages(c('devtools','mplot', 'googleVis'), repos = 'http://cran.us.r-project.org')"
+RUN R -e "require(devtools); install_github('ramnathv/rCharts')"
+
+RUN R -e "install.packages('glmnet', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('pROC', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('data.table', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('caret', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('sqldf', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('wordcloud', repos = 'http://cran.us.r-project.org')"
+
+#Python
+RUN apt-get install -y python-pip python-tk xvfb
+ENV DISPLAY=":0"
+RUN pip install -U pip
+RUN pip install -U setuptools
+RUN pip install pandas
+RUN pip install numpy
+RUN pip install scipy
+RUN pip install matplotlib
+RUN pip install py4j
+
+RUN R -e "install.packages('bitops', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('maps', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('maptools', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('sp', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('grid', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('car', repos = 'http://cran.us.r-project.org')"
 
 # Add runit services
 COPY sv /etc/service 
