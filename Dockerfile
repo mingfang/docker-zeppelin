@@ -39,13 +39,23 @@ RUN R -e "install.packages('knitr', repos = 'http://cran.us.r-project.org')"
 RUN R -e "install.packages('ggplot2', repos = 'http://cran.us.r-project.org')"
 RUN R -e "install.packages(c('devtools','mplot', 'googleVis'), repos = 'http://cran.us.r-project.org')"
 RUN R -e "require(devtools); install_github('ramnathv/rCharts')"
-
 RUN R -e "install.packages('glmnet', repos = 'http://cran.us.r-project.org')"
 RUN R -e "install.packages('pROC', repos = 'http://cran.us.r-project.org')"
 RUN R -e "install.packages('data.table', repos = 'http://cran.us.r-project.org')"
 RUN R -e "install.packages('caret', repos = 'http://cran.us.r-project.org')"
 RUN R -e "install.packages('sqldf', repos = 'http://cran.us.r-project.org')"
 RUN R -e "install.packages('wordcloud', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('bitops', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('maps', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('maptools', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('sp', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('grid', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('car', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('tidyverse', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('caret', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('randomForest', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('kernlab', repos = 'http://cran.us.r-project.org')"
+RUN R -e "install.packages('e1071', repos = 'http://cran.us.r-project.org')"
 
 #Python
 RUN apt-get install -y python-pip python-tk xvfb
@@ -57,13 +67,10 @@ RUN pip install numpy
 RUN pip install scipy
 RUN pip install matplotlib
 RUN pip install py4j
+RUN pip install bokeh
+RUN pip install scikit-learn
+RUN pip install pandasql
 
-RUN R -e "install.packages('bitops', repos = 'http://cran.us.r-project.org')"
-RUN R -e "install.packages('maps', repos = 'http://cran.us.r-project.org')"
-RUN R -e "install.packages('maptools', repos = 'http://cran.us.r-project.org')"
-RUN R -e "install.packages('sp', repos = 'http://cran.us.r-project.org')"
-RUN R -e "install.packages('grid', repos = 'http://cran.us.r-project.org')"
-RUN R -e "install.packages('car', repos = 'http://cran.us.r-project.org')"
 
 # Add runit services
 COPY sv /etc/service 
